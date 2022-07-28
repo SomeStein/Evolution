@@ -15,7 +15,7 @@ class Creature extends gameObject {
       this.target = this
       this.lastTarget = this
       this.viewingRadius = 40;
-      this.hunger = 1000
+      this.hunger = 100000
       this.dead = false
    }
 
@@ -25,8 +25,8 @@ class Creature extends gameObject {
 
    chooseTarget(qt) {
       let instances = qt.instancesInView(this.pos.x, this.pos.y, this.viewingRadius)
-      let noise1 = (noise(frameCount / 100 + 100 * this.id) - 0.5) * 3
-      let noise2 = (noise(frameCount / 100 + 200 * this.id) - 0.5) * 3
+      let noise1 = (noise(frameCount / 100 + 1 + 100 * this.id) - 0.5) * 10
+      let noise2 = (noise(frameCount / 100 + 2 + 200 * this.id) - 0.5) * 10
       let obj = { pos: createVector(noise1, noise2).add(this.lastTarget.pos) }
       return obj
    }
@@ -73,7 +73,7 @@ class Creature extends gameObject {
       if (this.dead) {
          if (frameCount - this.deathTime > 300) {
 
-            this.c = color(0,40,200,50)
+            this.c = color(0, 40, 200, 50)
          }
       }
       let c = this.c || color(0, 40, 200)

@@ -49,15 +49,16 @@ function defaultSetup() {
   mousePressedY = null;
 
   //initializing Quadtree
-  MainBoundary = new Boundary(-width, -height, width*3, height*3);
+  MainBoundary = new Boundary(0,0,width,height)
+  //MainBoundary = new Boundary(-width, -height, width*3, height*3);
   Quadtree = new QuadTree(MainBoundary, cap, 0);
 
   //Generating Worldtiles
 
   //Spawning default objects
-  for (let i = 0; i < 0; i++) {
-    let x = 300
-    let y = 500
+  for (let i = 0; i < 1000; i++) {
+    let x = random(width)
+    let y = random(height)
     human = new Human(objectID.next().value, x, y)
     human.dna[0] = 0.45
     Quadtree.insert(human);
@@ -120,7 +121,7 @@ function draw() {
 
   //Quadtree 
   Quadtree = Quadtree.update();
-  Quadtree.show();
+  //Quadtree.show();
 
   //Updating World
 

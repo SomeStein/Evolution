@@ -186,12 +186,15 @@ class QuadTree {
    }
 
    //query all instances in the tree that are in a given circle
-   instancesInView(x, y, r, found = []) {
+   instancesInView(x, y, r, found ) {
+      if (!found) {
+         found = [];
+     }
 
       if (!this.boundary.intersects(x, y, r)) {
          return ;
       } else if(this.instances.length > 0) {
-         this.boundary.show(color("green"))
+         //this.boundary.show(color("green"))
          for (let instance of this.instances) {
             debugCounter.next()
             if (instance.pos.dist(createVector(x, y)) < r) {
