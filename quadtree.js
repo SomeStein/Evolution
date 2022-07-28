@@ -211,7 +211,13 @@ class QuadTree {
 
    //Debugging
    show() {
-      if (!this.divided) {
+      if(this.divided) {
+         this.northwest.show()
+         this.northeast.show()
+         this.southwest.show()
+         this.southeast.show()
+      }
+      else if ( this.instances.length > 0) {
          stroke(255);
          strokeWeight(0.5);
          noFill()
@@ -220,12 +226,7 @@ class QuadTree {
       }
 
 
-      else {
-         this.northwest.show()
-         this.northeast.show()
-         this.southwest.show()
-         this.southeast.show()
-      }
+      
 
    }
 }

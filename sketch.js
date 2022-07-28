@@ -119,7 +119,7 @@ function draw() {
 
   //Quadtree 
   Quadtree = Quadtree.update();
-  //Quadtree.show();
+  Quadtree.show();
 
   //Updating World
 
