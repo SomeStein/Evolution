@@ -15,7 +15,8 @@ class Creature extends gameObject {
       this.target = this
       this.lastTarget = this
       this.viewingRadius = 40;
-      this.hunger = 100
+      this.hunger = 1000
+      this.dead = false
    }
 
    move(target) {
@@ -23,17 +24,32 @@ class Creature extends gameObject {
    }
 
    chooseTarget(qt) {
-      let instances = qt.instancesInView(this.pos.x,this.pos.y,this.viewingRadius)
-      let noise1 = (noise(frameCount/100 + 100 * this.id) - 0.5) * 3
-      let noise2 = (noise(frameCount/100 + 200 * this.id) - 0.5) * 3
-      let obj = { pos: createVector(noise1,noise2).add(this.lastTarget.pos) }
+      let instances = qt.instancesInView(this.pos.x, this.pos.y, this.viewingRadius)
+      let noise1 = (noise(frameCount / 100 + 100 * this.id) - 0.5) * 3
+      let noise2 = (noise(frameCount / 100 + 200 * this.id) - 0.5) * 3
+      let obj = { pos: createVector(noise1, noise2).add(this.lastTarget.pos) }
       return obj
    }
 
    update(qt) {
 
+      if (this.dead) {
+         // if(frameCount - this.deathTime > 100 ){
+         //    delete this.world[this.id]
+         // }
+         return
+      }
+
       //aging
       this.age += 1
+
+      //hunger
+      this.hunger -= 1
+
+      //if hunger <= 0 dieing
+      if (this.hunger <= 0) {
+         this.die()
+      }
 
       //choosing new target after reaching last one
       if (this.pos.dist(this.target.pos) < 1) {
@@ -48,13 +64,25 @@ class Creature extends gameObject {
 
    }
 
+   die() {
+      this.dead = true
+      this.deathTime = frameCount
+   }
+
    show() {
+      if (this.dead) {
+         if (frameCount - this.deathTime > 300) {
+
+            this.c = color(0,40,200,50)
+         }
+      }
       let c = this.c || color(0, 40, 200)
       noStroke();
       fill(c);
       ellipse(this.pos.x, this.pos.y, 5, 5);
-      //fill(150, 30, 45);
-      //ellipse(this.target.pos.x, this.target.pos.y, 5, 5);
+      noFill();
+      stroke(255)
+      //ellipse(this.pos.x, this.pos.y, this.viewingRadius*2);
    }
 
 

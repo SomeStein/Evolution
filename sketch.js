@@ -55,9 +55,9 @@ function defaultSetup() {
   //Generating Worldtiles
 
   //Spawning default objects
-  for (let i = 0; i < 200; i++) {
-    let x = random(width)
-    let y = random(height)
+  for (let i = 0; i < 0; i++) {
+    let x = 300
+    let y = 500
     human = new Human(objectID.next().value, x, y)
     human.dna[0] = 0.45
     Quadtree.insert(human);
@@ -99,6 +99,7 @@ function setup() {
   defaultSetup()
 
   //Debugging 
+  //frameRate(1)
   debugCounter = makeRangeIterator();
 
 }
@@ -225,13 +226,21 @@ function windowResized() {
 }
 function mouseClicked() {
   //clicking Buttons if mouse hovers over
+  let buttonClicked = false
   for (const key in Buttons) {
     if (Object.hasOwnProperty.call(Buttons, key)) {
       const button = Buttons[key];
       if (button.hoverOver(mouseX, mouseY)) {
         button.click();
+        buttenClicked = true
       }
     }
+  }
+  if(!buttonClicked){
+    let human = new Human(objectID.next().value, mouseX, mouseY)
+    human.dna[0] = 0.45
+    Quadtree.insert(human);
+    World[human.id] = human
   }
 }
 
