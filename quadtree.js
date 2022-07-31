@@ -26,9 +26,9 @@ class Boundary {
    contains(instance) {
       return (
          instance.pos.x >= this.pos.x &&
-         instance.pos.x <= this.pos.x + this.w &&
+         instance.pos.x < this.pos.x + this.w &&
          instance.pos.y >= this.pos.y &&
-         instance.pos.y <= this.pos.y + this.h
+         instance.pos.y < this.pos.y + this.h
       );
    }
 
@@ -140,31 +140,6 @@ class QuadTree {
          return true
       }
    }
-   // insert(instance) {
-   //    if (!this.boundary.contains(instance)) {
-   //       return false;
-   //    }
-
-   //    if (this.instances.length < this.capacity) {
-   //       this.instances.push(instance);
-   //       return true;
-   //    } else if (this.depth < this.maxDepth) {
-
-   //       //subdivide if too many instances in this branch 
-   //       if (!this.divided) {
-   //          this.subdivide();
-   //       }
-   //       if (this.northeast.insert(instance)) {
-   //          return true;
-   //       } else if (this.northwest.insert(instance)) {
-   //          return true;
-   //       } else if (this.southeast.insert(instance)) {
-   //          return true;
-   //       } else if (this.southwest.insert(instance)) {
-   //          return true;
-   //       }
-   //    }
-   // }
 
    //returning all instances of tree in a list
    allInstances() {

@@ -1,10 +1,11 @@
 class Button {
-  constructor(x, y, w, h, round, text, col, ButtonFunction, visible = true) {
+  constructor(x, y, w, h, round, id, text, col, ButtonFunction, visible = true) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.round = round;
+    this.id = id
     this.text = text;
     this.col = col;
     this.visible = visible;
@@ -40,5 +41,30 @@ class Button {
 
   click() {
     this.ButtonFunction();
+  }
+}
+
+class DropDown extends Button {
+  constructor(x, y, w, h, round, id, text, col, ButtonFunction, visible = true, orientation, nameList, functionList) {
+    super(x, y, w, h, round, id, text, col, ButtonFunction, visible = true)
+    this.orientation = orientation
+    this.nameList = nameList
+    this.functionList = functionList
+
+    if (this.orientation == 0) {
+      this.Xoffset = 0
+      this.Yoffset = this.h
+    }
+    else if (this.orientation == 1) {
+      this.Xoffset = this.w
+      this.Yoffset = 0
+    }
+    else {
+      this.Xoffset = 0
+    }
+
+    for (let i = 0; i < this.nameList.length; i++) {
+      let button = new Button(this.x + this.Xoffset, this.y + this.Yoffset,)
+    }
   }
 }
