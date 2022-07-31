@@ -28,7 +28,14 @@ class Creature extends gameObject {
       let noise1 = (noise(frameCount / 100 + 1 + 100 * this.id) - 0.5) * 10
       let noise2 = (noise(frameCount / 100 + 2 + 200 * this.id) - 0.5) * 10
       let obj = { pos: createVector(noise1, noise2).add(this.lastTarget.pos) }
-      return obj
+      if (MainBoundary.contains(obj)) {
+         return obj
+      }
+      else {
+         obj.pos.x = MainBoundary.pos.x + MainBoundary.w / 2
+         obj.pos.y = MainBoundary.pos.y + MainBoundary.h / 2
+         return obj
+      }
    }
 
    update(qt) {
@@ -70,11 +77,14 @@ class Creature extends gameObject {
    }
 
    show() {
-      if (this.dead) {
+      if (this.dead && DebugOptions["Debug Dead"]) {
          if (frameCount - this.deathTime > 300) {
 
             this.c = color(0, 40, 200, 50)
          }
+      }
+      else if (this.dead) {
+         return
       }
       let c = this.c || color(0, 40, 200)
       noStroke();

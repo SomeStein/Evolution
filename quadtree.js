@@ -171,7 +171,7 @@ class QuadTree {
       } else if(this.instances.length > 0) {
          //this.boundary.show(color("green"))
          for (let instance of this.instances) {
-            debugCounter.next()
+            debugQuadtreeFetchingCounter.next()
             if (instance.pos.dist(createVector(x, y)) < r) {
                found.push(instance);
             }

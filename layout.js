@@ -40,16 +40,19 @@ class Button {
   }
 
   click() {
-    this.ButtonFunction();
+    this.ButtonFunction(this);
   }
 }
 
 class DropDown extends Button {
-  constructor(x, y, w, h, round, id, text, col, ButtonFunction, visible = true, orientation, nameList, functionList) {
-    super(x, y, w, h, round, id, text, col, ButtonFunction, visible = true)
+  constructor(x, y, w, h, round, id, text, col, orientation, nameList, functionList, visible = true) {
+
+
     this.orientation = orientation
     this.nameList = nameList
     this.functionList = functionList
+    this.buttons = []
+    this.buttonsVisibility = false
 
     if (this.orientation == 0) {
       this.Xoffset = 0
@@ -61,10 +64,53 @@ class DropDown extends Button {
     }
     else {
       this.Xoffset = 0
+      this.Yoffset = this.h
     }
 
     for (let i = 0; i < this.nameList.length; i++) {
-      let button = new Button(this.x + this.Xoffset, this.y + this.Yoffset,)
+      let button = new Button(this.x + this.Xoffset,
+        this.y + this.Yoffset,
+        this.w,
+        this.h,
+        this.round,
+        this.id + " " + this.nameList[i],
+        this.nameList[i],
+        this.col,
+        this.functionList[i],
+        false)
+      Buttons[button.id] = button
+      this.buttons.push(button)
+    }
+    let ButtonFunction = function () {
+      let visible = !this.buttonsVisibility
+      for (let button of this.buttons) {
+        button.visible = visible
+      }
+    }
+    super(x, y, w, h, round, id, text, col, ButtonFunction, visible = true)
+  }
+}
+
+class InfoScreen {
+  constructor(text, x, y, w, col) {
+    this.text = text
+    this.x = x
+    this.y = y
+    this.w = w
+    this.col = col
+  }
+
+  showInfo(Info) {
+    
+    if (Info.length > 0) {
+      noStroke()
+      fill(this.col)
+      rect(this.x, this.y, this.w, Info.length * 25 + 25)
+      fill(0)
+      text(this.text, this.x + this.w / 2, this.y + 12.5)
+    }
+    for (let i = 0; i < Info.length; i++) {
+      text(Info[i], this.x + this.w / 2, this.y + i * 25 + 37.5)
     }
   }
 }
