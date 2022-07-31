@@ -1,14 +1,17 @@
+//Testing
+let mil = 0
+
 //Debugging
 let debugQuadtreeFetchingCounter = makeRangeIterator();
 let DebugOptions = {
   "Debug Quadtree": false,
-  "Debug QuadtreeFetching": false,
+  "Debug QuadtreeFetching": true,
   "Debug QuadtreeBuildTime": false,
-  "Debug FPS": false,
+  "Debug FPS": true,
   "Debug CreatureCount": false,
   "Debug BuildingCount": false,
   "Debug WorldCount": false,
-  "Debug FrameCount": false,
+  "Debug FrameCount": true,
   "Debug Dead": false,
   "Debug Generation": false,
   "Debug SimSpeed": false,
@@ -30,7 +33,7 @@ let Buildings = {};
 //Quadtree
 let Quadtree;
 let MainBoundary;
-let cap = 3;
+let cap = 1000;
 
 //ID system 
 function makeRangeIterator(start = 0, end = Infinity, step = 1) {
@@ -78,7 +81,7 @@ function defaultSetup() {
   //Generating Worldtiles
 
   //Spawning default objects
-  for (let i = 0; i < 0; i++) {
+  for (let i = 0; i < 1500; i++) {
     let x = random(width)
     let y = random(height)
     human = new Human(objectID.next().value, x, y)
@@ -145,6 +148,10 @@ function setup() {
 }
 
 function draw() {
+  if(frameCount % 2000== 0){
+    console.log(millis())
+    reload()
+  }
 
   //BACKGROUND
   background(51);
@@ -152,7 +159,8 @@ function draw() {
   //Debugging
   debugQuadtreeFetchingCounter = makeRangeIterator();
   if ((frameCount - 1) % 20 == 0) {
-    fr = round(frameRate())
+    fr += round(frameRate())
+    fr = round(fr/2)
   }
   debugInfo = [];
 
@@ -253,7 +261,7 @@ function draw() {
   //Debug Info Screen
   if (true) {
     if (DebugOptions["Debug QuadtreeFetching"]) {
-      debugInfo.push("Quadtree calls: " + debugQuadtreeFetchingCounter.next().value)
+      debugInfo.push("Quadtree dist evaluations: " + debugQuadtreeFetchingCounter.next().value)
     }
     if (DebugOptions["Debug QuadtreeBuildTime"]) {
       debugInfo.push("Quadtree Build Time: " + ceil(quadtreeBuildTime))

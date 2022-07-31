@@ -161,14 +161,14 @@ class QuadTree {
    }
 
    //query all instances in the tree that are in a given circle
-   instancesInView(x, y, r, found ) {
+   instancesInView(x, y, r, found) {
       if (!found) {
          found = [];
-     }
-
+      }
+      debugQuadtreeFetchingCounter.next()
       if (!this.boundary.intersects(x, y, r)) {
-         return ;
-      } else if(this.instances.length > 0) {
+         return;
+      } else if (this.instances.length > 0) {
          //this.boundary.show(color("green"))
          for (let instance of this.instances) {
             debugQuadtreeFetchingCounter.next()
@@ -190,13 +190,13 @@ class QuadTree {
 
    //Debugging
    show() {
-      if(this.divided) {
+      if (this.divided) {
          this.northwest.show()
          this.northeast.show()
          this.southwest.show()
          this.southeast.show()
       }
-      else if ( this.instances.length > 0) {
+      else if (this.instances.length > 0) {
          stroke(255);
          strokeWeight(0.5);
          noFill()
@@ -205,7 +205,7 @@ class QuadTree {
       }
 
 
-      
+
 
    }
 }
