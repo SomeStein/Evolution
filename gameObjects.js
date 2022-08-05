@@ -11,48 +11,29 @@ class Creature extends gameObject {
    constructor(id, x, y, dna = [0, 0, 0]) {
       super(id, x, y)
       this.dna = dna;
+      this.speed = 0.5
       this.age = 0;
       this.target = this
       this.lastTarget = this
       this.viewingRadius = 40;
-      this.hunger = 6000
+      this.hunger = 60000
       this.dead = false
    }
 
    move(target) {
-      this.pos.add(this.target.pos.copy().sub(this.pos).limit(this.dna[0]));
+      this.pos.add(p5.Vector.sub(this.target.pos, this.pos).limit(this.speed));
    }
 
    chooseTarget(qt) {
-      let instances = qt.instancesInView(this.pos.x, this.pos.y, this.viewingRadius)
-      
-      if (instances.length > 0){
-         let nearest = instances[0]
-         let nearestDist = nearest.pos.dist(this.pos)
-         for(let i = 1; i < instances.length; i++){
-            if(instances[i].pos.dist(this.pos) < nearestDist || nearest == this){
-               nearest = instances[i]
-               nearestDist = nearest.pos.dist(this.pos)
-            }  
-         }
-         return nearest
-      }
-      console.log("not nearest")
-      let noise1 = (noise(frameCount / 100 + 1 + 100 * this.id) - 0.5) * 10
-      let noise2 = (noise(frameCount / 100 + 2 + 100 * this.id) - 0.5) * 10
-      let obj = { pos: createVector(noise1, noise2).add(this.lastTarget.pos) }
-      if (MainBoundary.contains(obj)) {
-         return obj
-      }
-      else {
-         obj.pos.x = MainBoundary.pos.x + MainBoundary.w / 2
-         obj.pos.y = MainBoundary.pos.y + MainBoundary.h / 2
-         return obj
-      }
+      let angle = noise(frameCount / 100 + this.id * 10) * TWO_PI * 4
+      let v = p5.Vector.fromAngle(angle)
+      v.add(this.pos)
+      let obj = { pos: v }
+      return obj
    }
 
    update(qt) {
-      
+
       if (this.dead) {
          // if(frameCount - this.deathTime > 100 ){
          //    delete this.world[this.id]
@@ -91,24 +72,23 @@ class Creature extends gameObject {
 
    show() {
       if (this.dead && DebugOptions["Debug Dead"]) {
-         if (frameCount - this.deathTime > 300) {
+         this.c = color(0, 40, 200, 50)
+      }
 
-            this.c = color(0, 40, 200, 50)
-         }
-      }
-      else if (this.dead) {
-         return
-      }
+      noStroke()
+      fill(200, 0, 0)
+      ellipse(this.target.pos.x, this.target.pos.y, 5)
       let c = this.c || color(0, 40, 200)
-      noStroke();
       fill(c);
       ellipse(this.pos.x, this.pos.y, 10);
-      noFill();
-      stroke(255)
-      //ellipse(this.pos.x, this.pos.y, this.viewingRadius*2);
+
+      if (DebugOptions["Debug Dead"]) {
+         noFill();
+         stroke(0)
+         ellipse(this.pos.x, this.pos.y, this.viewingRadius * 2);
+      }
+
    }
-
-
 
 }
 
@@ -120,15 +100,6 @@ class Human extends Creature {
    breed(otherHuman, id) {
       let dna = this.mutate(this.dna, otherHuman.dna);
       let baby = new Human(id, this.x, this.y, dna);
-
-   }
-}
-
-//BUILDINGS
-
-class Building extends gameObject {
-   constructor(id, x, y) {
-      super(id, x, y)
 
    }
 }

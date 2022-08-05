@@ -165,14 +165,14 @@ class QuadTree {
       if (!found) {
          found = [];
       }
-      else if(found.length > 5000){
+      else if(found.length > 1000){
          return found
       }
       debugQuadtreeFetchingCounter.next()
       if (!this.boundary.intersects(x, y, r)) {
-         return;
+         return found;
       } else if (this.instances.length > 0) {
-         //this.boundary.show(color("green"))
+         this.boundary.show(color("green"))
          for (let instance of this.instances) {
             debugQuadtreeFetchingCounter.next()
             if (instance.pos.dist(createVector(x, y)) < r) {

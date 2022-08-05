@@ -1,10 +1,10 @@
 //Debugging
-//p5.disableFriendlyErrors = true;
+p5.disableFriendlyErrors = true;
 let debugQuadtreeFetchingCounter = makeRangeIterator();
 let DebugOptions = {
   "Debug Quadtree": false,
   "Debug QuadtreeFetching": false,
-  "Debug QuadtreeBuildTime": false,
+  "Debug QuadtreeBuildTime": true,
   "Debug FPS": false,
   "Debug CreatureCount": false,
   "Debug BuildingCount": false,
@@ -56,20 +56,21 @@ let objectID;
 
 //Setup Parameters
 let canvas
-const HumanStartAmount = 4000
-const mapWidth = 5000
-const mapHeight = 5000
+const HumanStartAmount = 10000
+const mapWidth = 3000
+const mapHeight = 3000
 let TileSet
-let TileRef = {tileSize: 16}
-let gameMap 
+let TileRef 
+let gameMap
 
 //Draw Parameters
 let simulationSpeed;
 let seed = 99;
 let quitted = false;
 
-function preload(){
+function preload() {
   TileSet = loadImage("TileSet.png")
+  TileRef = { tileSize: 16 } 
 }
 
 
@@ -77,7 +78,7 @@ function defaultSetup() {
   WorldObjects = {};
   simulationSpeed = 1;
   objectID = makeRangeIterator();
-  
+
 
   //Transform default
   currentScale = 1;
@@ -88,22 +89,22 @@ function defaultSetup() {
 
   //initializing Quadtree
   //MainBoundary = new Boundary(0, 0, width, height)
-  MainBoundary = new Boundary(-mapWidth/2+width/2, -mapHeight/2+height/2, mapWidth, mapHeight);
+  MainBoundary = new Boundary(-mapWidth / 2 + width / 2, -mapHeight / 2 + height / 2, mapWidth, mapHeight);
   Quadtree = new QuadTree(MainBoundary, cap, 0);
 
   //Generating Worldtiles
-  gameMap = new World(mapWidth,mapHeight,TileSet,TileRef,seed)
+  gameMap = new World(mapWidth, mapHeight, TileSet, TileRef, seed)
 
   //Spawning default objects
   for (let i = 0; i < HumanStartAmount; i++) {
     let MB = MainBoundary
     let id = objectID.next().value
 
-    let x = noise(id*20)*MB.w + MB.pos.x
-    let y = noise(id*22+100)*MB.h + MB.pos.y
+    let x = noise(id * 20) * MB.w + MB.pos.x
+    let y = noise(id * 22 + 100) * MB.h + MB.pos.y
     //x = MB.pos.x +MB.w/2 + random(-10,10)
     //y = MB.pos.y +MB.h/2 + random(-10,10)
-    human = new Human(id,x,y)
+    human = new Human(id, x, y)
     human.dna[0] = 0.6
     Quadtree.insert(human);
     Creatures[human.id] = human
@@ -113,35 +114,35 @@ function defaultSetup() {
 function setup() {
   //CANVAS, NO SCROLLING
   canvas = createCanvas(windowWidth, windowHeight);
-  canvas.drawingContext.imageSmoothingEnabled=false;
+  canvas.drawingContext.imageSmoothingEnabled = false;
 
   document.body.style.overflow = "hidden";
   //pixelDensity(1)
 
   // Creating Buttons and adding to Buttons object
   let buttonsData = [
-    [0, 0, 160, 40, 0, "Menu", "Menu", color(100), mainMenu, false],
-    [0, 40, 160, 40, 0, "Sim Speed +", "Simulation Speed +", color(100), simSpeedUp, false],
-    [0, 80, 160, 40, 0, "Sim Speed -", "Simulation Speed -", color(100), simSpeedDown, false],
-    [0, 120, 160, 40, 0, "Reload", "Reload Simulation", color(100), reload, false],
-    [0, 160, 160, 40, 0, "Save Game", "Save", color(100), saveGame, false],
-    [0, 200, 160, 40, 0, "Load Game", "Load", color(100), loadGame, false],
-    [0, 240, 160, 40, 0, "Debug Menu", "Debug Menu", color(100), debugMenu, false],
-    [160, 240, 200, 30, 0, "Debug Quadtree", "Quadtree", color(100), debugFunction, false],
-    [160, 270, 200, 30, 0, "Debug QuadtreeFetching", "Quadtree calls", color(100), debugFunction, false],
-    [160, 300, 200, 30, 0, "Debug QuadtreeBuildTime", "Quadtree build time", color(100), debugFunction, false],
-    [160, 330, 200, 30, 0, "Debug FPS", "FPS", color(100), debugFunction, false],
-    [160, 360, 200, 30, 0, "Debug CreatureCount", "Creature count", color(100), debugFunction, false],
-    [160, 390, 200, 30, 0, "Debug BuildingCount", "Building count", color(100), debugFunction, false],
-    [160, 420, 200, 30, 0, "Debug WorldObjectsCount", "WorldObjects elements count", color(100), debugFunction, false],
-    [160, 450, 200, 30, 0, "Debug FrameCount", "Frame number", color(100), debugFunction, false],
-    [160, 480, 200, 30, 0, "Debug Dead", "Show dead", color(100), debugFunction, false],
-    [160, 510, 200, 30, 0, "Debug Generation", "Highest Generation number", color(100), debugFunction, false],
-    [160, 540, 200, 30, 0, "Debug SimSpeed", "Simulation speed", color(100), debugFunction, false],
-    [160, 570, 200, 30, 0, "Debug CreaturesShow", "Show creatures", color(100), debugFunction, false],
-    [160, 600, 200, 30, 0, "Debug BuildingsShow", "Show buildings", color(100), debugFunction, false],
-    [160, 630, 200, 30, 0, "Debug WorldObjectsShow", "Show WorldObjects", color(100), debugFunction, false],
-    [0, 280, 160, 40, 0, "Quit", "Quit", color(100), quit, false],
+    [0, 0, 160, 40, 0, "Menu", "Menu", color(200, 230), mainMenu, true],
+    [0, 40, 160, 40, 0, "Sim Speed +", "Simulation Speed +", color(200, 230), simSpeedUp, false],
+    [0, 80, 160, 40, 0, "Sim Speed -", "Simulation Speed -", color(200, 230), simSpeedDown, false],
+    [0, 120, 160, 40, 0, "Reload", "Reload Simulation", color(200, 230), reload, false],
+    [0, 160, 160, 40, 0, "Save Game", "Save", color(200, 230), saveGame, false],
+    [0, 200, 160, 40, 0, "Load Game", "Load", color(200, 230), loadGame, false],
+    [0, 240, 160, 40, 0, "Debug Menu", "Debug Menu", color(200, 230), debugMenu, false],
+    [160, 240, 200, 30, 0, "Debug Quadtree", "Quadtree", color(200, 230), debugFunction, false],
+    [160, 270, 200, 30, 0, "Debug QuadtreeFetching", "Quadtree calls", color(200, 230), debugFunction, false],
+    [160, 300, 200, 30, 0, "Debug QuadtreeBuildTime", "Quadtree build time", color(200, 230), debugFunction, false],
+    [160, 330, 200, 30, 0, "Debug FPS", "FPS", color(200, 230), debugFunction, false],
+    [160, 360, 200, 30, 0, "Debug CreatureCount", "Creature count", color(200, 230), debugFunction, false],
+    [160, 390, 200, 30, 0, "Debug BuildingCount", "Building count", color(200, 230), debugFunction, false],
+    [160, 420, 200, 30, 0, "Debug WorldObjectsCount", "World objects count", color(200, 230), debugFunction, false],
+    [160, 450, 200, 30, 0, "Debug FrameCount", "Frame number", color(200, 230), debugFunction, false],
+    [160, 480, 200, 30, 0, "Debug Dead", "Show dead", color(200, 230), debugFunction, false],
+    [160, 510, 200, 30, 0, "Debug Generation", "Highest Generation number", color(200, 230), debugFunction, false],
+    [160, 540, 200, 30, 0, "Debug SimSpeed", "Simulation speed", color(200, 230), debugFunction, false],
+    [160, 570, 200, 30, 0, "Debug CreaturesShow", "Show creatures", color(200, 230), debugFunction, false],
+    [160, 600, 200, 30, 0, "Debug BuildingsShow", "Show buildings", color(200, 230), debugFunction, false],
+    [160, 630, 200, 30, 0, "Debug WorldObjectsShow", "Show WorldObjects", color(200, 230), debugFunction, false],
+    [0, 280, 160, 40, 0, "Quit", "Quit", color(200, 230), quit, false],
   ];
 
   for (let i = 0; i < buttonsData.length; i++) {
@@ -165,7 +166,6 @@ function setup() {
 
   //Debugging 
   //frameRate(1)
-  
   debugStatsScreen = new InfoScreen("Debug Stats", width - 250, 0, 250, color(100, 50));
 
 }
@@ -188,7 +188,7 @@ function draw() {
   translate(transformX, transformY);
   scale(currentScale);
 
-  
+
 
   //Updating World
 
@@ -227,44 +227,38 @@ function draw() {
 
   //World Objects
   if (DebugOptions["Debug WorldObjectsShow"]) {
-    for (let j = 0; j < simulationSpeed; j++) {
-      for (const key in WorldObjects) {
-        if (Object.hasOwnProperty.call(WorldObjects, key)) {
-          const tile = WorldObjects[key];
-          tile.show();
-        }
+    for (const key in WorldObjects) {
+      if (Object.hasOwnProperty.call(WorldObjects, key)) {
+        const tile = WorldObjects[key];
+        tile.show();
       }
     }
   }
   //Buildings
   if (DebugOptions["Debug BuildingsShow"]) {
-    for (let j = 0; j < simulationSpeed; j++) {
-      for (const key in Buildings) {
-        if (Object.hasOwnProperty.call(Buildings, key)) {
-          const building = Buildings[key];
-          building.show();
-        }
+    for (const key in Buildings) {
+      if (Object.hasOwnProperty.call(Buildings, key)) {
+        const building = Buildings[key];
+        building.show();
       }
     }
   }
   //Creatures
   if (DebugOptions["Debug CreaturesShow"]) {
     //Creatures
-    for (let j = 0; j < simulationSpeed; j++) {
-      for (const key in Creatures) {
-        if (Object.hasOwnProperty.call(Creatures, key)) {
-          const creature = Creatures[key];
-          creature.show();
-        }
+    for (const key in Creatures) {
+      if (Object.hasOwnProperty.call(Creatures, key)) {
+        const creature = Creatures[key];
+        //creature.show();
       }
     }
   }
 
   //Quadtree 
-  quadtreeBuildTime = millis();
+  quadtreeBuildTime = performance.now()
   Quadtree = Quadtree.update();
-  quadtreeBuildTime -= millis();
-  quadtreeBuildTime *= -1
+  quadtreeBuildTime = performance.now() - quadtreeBuildTime
+  
   if (DebugOptions["Debug Quadtree"]) {
     Quadtree.show();
   }

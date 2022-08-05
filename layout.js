@@ -9,23 +9,30 @@ class Button {
     this.text = text;
     this.col = col;
     this.visible = visible;
-    this.highlightColor = lerpColor(col, color("WHITE"), 0.2);
+    this.highlightColor = lerpColor(col, color(0), 0.3);
     this.ButtonFunction = ButtonFunction;
   }
 
   show() {
     let c;
+    let tc;
     if (this.hoverOver(mouseX, mouseY)) {
       c = this.highlightColor;
+      tc = color(255);
+  
     } else {
       c = this.col;
+      tc = color(0);
     }
+
+    noStroke()
     fill(c);
-    noStroke();
+    
     rect(this.x, this.y, this.w, this.h, this.round);
     fill(0);
     textAlign(CENTER, CENTER);
     textSize(15);
+    fill(tc)
     text(this.text, this.x + this.w / 2, this.y + this.h / 2);
   }
 
