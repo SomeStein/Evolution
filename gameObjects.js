@@ -8,14 +8,14 @@ class gameObject {
 //CREATURES
 
 class Creature extends gameObject {
-   constructor(id, x, y, dna = [0.25, 0, 0]) {
+   constructor(id, x, y, dna = [0, 0, 0]) {
       super(id, x, y)
       this.dna = dna;
       this.age = 0;
       this.target = this
       this.lastTarget = this
       this.viewingRadius = 40;
-      this.hunger = 100000
+      this.hunger = 6000
       this.dead = false
    }
 
@@ -25,8 +25,21 @@ class Creature extends gameObject {
 
    chooseTarget(qt) {
       let instances = qt.instancesInView(this.pos.x, this.pos.y, this.viewingRadius)
+      
+      if (instances.length > 0){
+         let nearest = instances[0]
+         let nearestDist = nearest.pos.dist(this.pos)
+         for(let i = 1; i < instances.length; i++){
+            if(instances[i].pos.dist(this.pos) < nearestDist || nearest == this){
+               nearest = instances[i]
+               nearestDist = nearest.pos.dist(this.pos)
+            }  
+         }
+         return nearest
+      }
+      console.log("not nearest")
       let noise1 = (noise(frameCount / 100 + 1 + 100 * this.id) - 0.5) * 10
-      let noise2 = (noise(frameCount / 100 + 2 + 200 * this.id) - 0.5) * 10
+      let noise2 = (noise(frameCount / 100 + 2 + 100 * this.id) - 0.5) * 10
       let obj = { pos: createVector(noise1, noise2).add(this.lastTarget.pos) }
       if (MainBoundary.contains(obj)) {
          return obj
@@ -39,7 +52,7 @@ class Creature extends gameObject {
    }
 
    update(qt) {
-
+      
       if (this.dead) {
          // if(frameCount - this.deathTime > 100 ){
          //    delete this.world[this.id]
@@ -89,7 +102,7 @@ class Creature extends gameObject {
       let c = this.c || color(0, 40, 200)
       noStroke();
       fill(c);
-      ellipse(this.pos.x, this.pos.y, 5, 5);
+      ellipse(this.pos.x, this.pos.y, 10);
       noFill();
       stroke(255)
       //ellipse(this.pos.x, this.pos.y, this.viewingRadius*2);

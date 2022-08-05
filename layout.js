@@ -114,3 +114,125 @@ class InfoScreen {
     }
   }
 }
+
+//Zooming and Translating 
+const zoomSensitivity = 0.1;
+const mouseDragDetectionThreshold = 5;
+const scaleMin = 0.125;
+const scaleMax = 12;
+let currentScale = 1;
+let transformX = 0;
+let transformY = 0;
+let mousePressedX = null;
+let mousePressedY = null;
+
+//Input Functions
+function mousePressed() {
+  mousePressedX = mouseX;
+  mousePressedY = mouseY;
+}
+function mouseDragged() {
+  if (dist(mousePressedX, mousePressedY, mouseX, mouseY) > mouseDragDetectionThreshold) {
+    transformX += (mouseX - pmouseX);
+    transformY += (mouseY - pmouseY);
+  }
+}
+function mouseReleased() {
+  mousePressedX = null;
+  mousePressedY = null;
+}
+function mouseWheel(event) {
+  // Determine the scale factor based on zoom sensitivity
+  let scaleFactor = null;
+  if (event.delta < 0) {
+    scaleFactor = 1 + zoomSensitivity;
+  } else {
+    scaleFactor = 1 - zoomSensitivity;
+  }
+
+  // Apply transformation and scale incrementally if within boundary 
+  if ((currentScale < scaleMax || scaleFactor < 1) && (currentScale > scaleMin || scaleFactor > 1)) {
+    currentScale = currentScale * scaleFactor
+
+    transformX = mouseX - (mouseX * scaleFactor) + (transformX * scaleFactor);
+    transformY = mouseY - (mouseY * scaleFactor) + (transformY * scaleFactor);
+  }
+
+  // Disable page scroll
+  return false;
+}
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  debugStatsScreen = new InfoScreen("Debug Stats", width - 250, 0, 250, color(100, 50))
+}
+function mouseClicked() {
+  //clicking Buttons if mouse hovers over
+  let buttonClicked = false
+  for (const key in Buttons) {
+    if (Object.hasOwnProperty.call(Buttons, key)) {
+      const button = Buttons[key];
+      if (button.hoverOver(mouseX, mouseY)) {
+        button.click();
+        buttonClicked = true
+      }
+    }
+  }
+  if (!buttonClicked) {
+    let human = new Human(objectID.next().value, (mouseX - transformX) / currentScale, (mouseY - transformY) / currentScale)
+    human.dna[0] = 0.45
+    Quadtree.insert(human);
+    Creatures[human.id] = human
+  }
+}
+
+//Button Functions
+function mainMenu() {
+  let visible = !Buttons["Reload"].visible;
+  Buttons["Reload"].visible = visible;
+  Buttons["Sim Speed +"].visible = visible;
+  Buttons["Sim Speed -"].visible = visible;
+  Buttons["Save Game"].visible = visible;
+  Buttons["Load Game"].visible = visible;
+  Buttons["Debug Menu"].visible = visible;
+  Buttons["Quit"].visible = visible;
+  if (Buttons["Debug Quadtree"].visible) {
+    debugMenu()
+  }
+}
+function reload() {
+  defaultSetup()
+}
+function simSpeedUp() {
+  simulationSpeed += 1;
+}
+function simSpeedDown() {
+  simulationSpeed -= 1;
+}
+function saveGame() {
+
+}
+function loadGame() {
+
+}
+function debugMenu() {
+  Buttons["Debug Quadtree"].visible = !Buttons["Debug Quadtree"].visible;
+  Buttons["Debug QuadtreeFetching"].visible = !Buttons["Debug QuadtreeFetching"].visible;
+  Buttons["Debug QuadtreeBuildTime"].visible = !Buttons["Debug QuadtreeBuildTime"].visible;
+  Buttons["Debug FPS"].visible = !Buttons["Debug FPS"].visible;
+  Buttons["Debug CreatureCount"].visible = !Buttons["Debug CreatureCount"].visible;
+  Buttons["Debug BuildingCount"].visible = !Buttons["Debug BuildingCount"].visible;
+  Buttons["Debug WorldObjectsCount"].visible = !Buttons["Debug WorldObjectsCount"].visible;
+  Buttons["Debug FrameCount"].visible = !Buttons["Debug FrameCount"].visible;
+  Buttons["Debug Dead"].visible = !Buttons["Debug Dead"].visible;
+  Buttons["Debug Generation"].visible = !Buttons["Debug Generation"].visible;
+  Buttons["Debug SimSpeed"].visible = !Buttons["Debug SimSpeed"].visible;
+  Buttons["Debug CreaturesShow"].visible = !Buttons["Debug CreaturesShow"].visible;
+  Buttons["Debug BuildingsShow"].visible = !Buttons["Debug BuildingsShow"].visible;
+  Buttons["Debug WorldObjectsShow"].visible = !Buttons["Debug WorldObjectsShow"].visible;
+}
+function quit() {
+  quitted = true
+}
+function debugFunction(self) {
+  DebugOptions[self.id] = !DebugOptions[self.id]
+}

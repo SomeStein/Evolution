@@ -165,6 +165,9 @@ class QuadTree {
       if (!found) {
          found = [];
       }
+      else if(found.length > 5000){
+         return found
+      }
       debugQuadtreeFetchingCounter.next()
       if (!this.boundary.intersects(x, y, r)) {
          return;
@@ -197,10 +200,11 @@ class QuadTree {
          this.southeast.show()
       }
       else if (this.instances.length > 0) {
-         stroke(255);
+         //stroke(255);
+         noStroke()
          strokeWeight(0.5);
          noFill()
-         fill(map(this.instances.length, 0, this.capacity, 0, 255), 150);
+         fill(map(this.instances.length, 0, this.capacity, 0, 255), 170);
          rect(this.boundary.pos.x, this.boundary.pos.y, this.boundary.w, this.boundary.h);
       }
 
