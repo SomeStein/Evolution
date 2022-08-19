@@ -19,7 +19,7 @@ class Button {
     if (this.hoverOver(mouseX, mouseY)) {
       c = this.highlightColor;
       tc = color(255);
-  
+
     } else {
       c = this.col;
       tc = color(0);
@@ -27,7 +27,7 @@ class Button {
 
     noStroke()
     fill(c);
-    
+
     rect(this.x, this.y, this.w, this.h, this.round);
     fill(0);
     textAlign(CENTER, CENTER);
@@ -39,9 +39,9 @@ class Button {
   hoverOver(x, y) {
     return (
       x >= this.x &&
-      x <= this.x + this.w &&
+      x < this.x + this.w &&
       y >= this.y &&
-      y <= this.y + this.h &&
+      y < this.y + this.h &&
       this.visible
     );
   }
@@ -108,7 +108,7 @@ class InfoScreen {
   }
 
   showInfo(Info) {
-    
+
     if (Info.length > 0) {
       noStroke()
       fill(this.col)
@@ -184,7 +184,7 @@ function mouseClicked() {
       }
     }
   }
-  if (!buttonClicked) {
+  if (false) {
     let human = new Human(objectID.next().value, (mouseX - transformX) / currentScale, (mouseY - transformY) / currentScale)
     human.dna[0] = 0.45
     Quadtree.insert(human);
@@ -213,7 +213,9 @@ function simSpeedUp() {
   simulationSpeed += 1;
 }
 function simSpeedDown() {
-  simulationSpeed -= 1;
+  if (simulationSpeed > 1) {
+    simulationSpeed -= 1;
+  }
 }
 function saveGame() {
 
@@ -224,13 +226,13 @@ function loadGame() {
 function debugMenu() {
   Buttons["Debug Quadtree"].visible = !Buttons["Debug Quadtree"].visible;
   Buttons["Debug QuadtreeFetching"].visible = !Buttons["Debug QuadtreeFetching"].visible;
-  Buttons["Debug QuadtreeBuildTime"].visible = !Buttons["Debug QuadtreeBuildTime"].visible;
+  Buttons["Debug updatingTime"].visible = !Buttons["Debug updatingTime"].visible;
   Buttons["Debug FPS"].visible = !Buttons["Debug FPS"].visible;
   Buttons["Debug CreatureCount"].visible = !Buttons["Debug CreatureCount"].visible;
   Buttons["Debug BuildingCount"].visible = !Buttons["Debug BuildingCount"].visible;
   Buttons["Debug WorldObjectsCount"].visible = !Buttons["Debug WorldObjectsCount"].visible;
   Buttons["Debug FrameCount"].visible = !Buttons["Debug FrameCount"].visible;
-  Buttons["Debug Dead"].visible = !Buttons["Debug Dead"].visible;
+  Buttons["Debug CreatureInfo"].visible = !Buttons["Debug CreatureInfo"].visible;
   Buttons["Debug Generation"].visible = !Buttons["Debug Generation"].visible;
   Buttons["Debug SimSpeed"].visible = !Buttons["Debug SimSpeed"].visible;
   Buttons["Debug CreaturesShow"].visible = !Buttons["Debug CreaturesShow"].visible;

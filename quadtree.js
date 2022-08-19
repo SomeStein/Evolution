@@ -5,7 +5,6 @@ function pointInCircle(px, py, cx, cy, cr) {
 
 }
 
-
 //Boundaries for Quadsections, handles intersection of Quadrant and ViewingCircle 
 class Boundary {
    constructor(x, y, w, h) {
@@ -79,7 +78,7 @@ class QuadTree {
       this.boundary = boundary;
       this.capacity = cap;
       this.depth = depth;
-      this.maxDepth = 60;
+      this.maxDepth = 600;
       this.instances = [];
       this.divided = false;
    }
@@ -127,8 +126,9 @@ class QuadTree {
          } else if (this.southwest.insert(instance)) {
             return true;
          }
+         return false
       }
-      else if (this.instances.length == this.capacity && this.depth < this.maxDepth) {
+      else if (this.instances.length >= this.capacity && this.depth < this.maxDepth) {
          this.subdivide()
          this.instances.push(instance)
          this.insertList(this.instances)
@@ -149,7 +149,13 @@ class QuadTree {
             this.southwest.allInstances(),
             this.southeast.allInstances())
       }
-      return this.instances
+      let all = []
+      for (let i = 0; i < this.instances.length; i++){
+         if(!(this.instances[i].dead)){
+            all.push(this.instances[i])
+         }
+      }
+      return all
    }
 
    //rebuilding the tree with new positions
@@ -172,7 +178,6 @@ class QuadTree {
       if (!this.boundary.intersects(x, y, r)) {
          return found;
       } else if (this.instances.length > 0) {
-         this.boundary.show(color("green"))
          for (let instance of this.instances) {
             debugQuadtreeFetchingCounter.next()
             if (instance.pos.dist(createVector(x, y)) < r) {
@@ -202,9 +207,7 @@ class QuadTree {
       else if (this.instances.length > 0) {
          //stroke(255);
          noStroke()
-         strokeWeight(0.5);
-         noFill()
-         fill(map(this.instances.length, 0, this.capacity, 0, 255), 170);
+         fill(map(this.instances.length, 0, this.capacity, 255, 0), 170);
          rect(this.boundary.pos.x, this.boundary.pos.y, this.boundary.w, this.boundary.h);
       }
 
